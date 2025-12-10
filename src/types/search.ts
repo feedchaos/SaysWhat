@@ -1,4 +1,16 @@
-export type RecordKind = "title" | "fact" | "person" | "concept" | "other"
+import { DEFAULT_KINDS } from "../config"
+
+export type RecordKind = (typeof DEFAULT_KINDS)[number]
+
+export interface SearchRequest {
+  text: string
+  result_limit?: number
+  per_source_limit?: number
+  kinds?: RecordKind[]
+  since_epoch?: number
+  until_epoch?: number
+  domains_primary?: string[]
+}
 
 export interface RecordSummary {
   id: string
@@ -24,7 +36,7 @@ export interface UnitTopic {
   position: number
 }
 
-export type EntityKind = "fact" | "title" | "person" | "concept"
+export type EntityKind = (typeof DEFAULT_KINDS)[number]
 
 export interface UnitEntityRef {
   id: string

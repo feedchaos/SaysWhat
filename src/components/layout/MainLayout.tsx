@@ -1,5 +1,5 @@
 import React from "react"
-import type { RecordAggregate } from "../../types/search"
+import type { RecordAggregate, RecordKind } from "../../types/search"
 import SearchPanel from "../search/SearchPanel"
 import DetailPanel from "../detail/DetailPanel"
 
@@ -13,6 +13,10 @@ interface MainLayoutProps {
   isSearching: boolean
   error: string | null
   query: string
+  availableKinds: RecordKind[]
+  selectedKinds: RecordKind[]
+  onSelectedKindsChange: (kinds: RecordKind[]) => void
+  onOpenProPanel: (record: RecordAggregate, sourceId?: string) => void
 }
 
 const MainLayout: React.FC<MainLayoutProps> = ({
@@ -25,6 +29,10 @@ const MainLayout: React.FC<MainLayoutProps> = ({
   isSearching,
   error,
   query,
+  availableKinds,
+  selectedKinds,
+  onSelectedKindsChange,
+  onOpenProPanel,
 }) => {
   // Responsive: use CSS media queries for layout, but conditionally render for mobile
   return (
@@ -53,6 +61,10 @@ const MainLayout: React.FC<MainLayoutProps> = ({
             isSearching={isSearching}
             error={error}
             query={query}
+            availableKinds={availableKinds}
+            selectedKinds={selectedKinds}
+            onSelectedKindsChange={onSelectedKindsChange}
+            onOpenProPanel={onOpenProPanel}
           />
         </div>
         <div
@@ -65,6 +77,7 @@ const MainLayout: React.FC<MainLayoutProps> = ({
             viewMode={viewMode}
             onBackToResults={() => setViewMode("results")}
             tier={tier}
+            onOpenProPanel={onOpenProPanel}
           />
         </div>
       </div>
@@ -72,21 +85,24 @@ const MainLayout: React.FC<MainLayoutProps> = ({
         .main-layout {
           display: flex;
           flex-direction: row;
-          gap: 2rem;
-          padding: 2rem 1.5rem;
+          gap: 0.5rem;
+          padding: 1rem 1.5rem;
           max-width: 1200px;
           margin: 0 auto;
         }
         .panel {
           flex: 1 1 0;
           min-width: 0;
+          min-height: 0;
+          display: flex;
+          flex-direction: column;
           transition: transform 0.35s cubic-bezier(.77,0,.18,1), opacity 0.25s;
         }
         .search-panel {
-          margin-right: 1rem;
+          margin-right: 0.5rem;
         }
         .detail-panel {
-          margin-left: 1rem;
+          margin-left: 0.5rem;
           transform: translateX(40px);
           opacity: 0.7;
         }
@@ -106,6 +122,9 @@ const MainLayout: React.FC<MainLayoutProps> = ({
             min-width: 0;
             max-width: 100vw;
             display: none;
+            flex: 1 1 0;
+            min-height: 0;       /* CRITICAL */
+            overflow-y: auto;    /* CRITICAL */
           }
           .panel.active {
             display: block;

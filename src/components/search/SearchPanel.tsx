@@ -1,6 +1,7 @@
 import React from "react"
-import type { RecordAggregate } from "../../types/search"
+import type { RecordAggregate, RecordKind } from "../../types/search"
 import ResultList from "./ResultList"
+import KindFilters from "./KindFilters"
 
 interface SearchPanelProps {
   rec_agg: RecordAggregate[]
@@ -11,6 +12,10 @@ interface SearchPanelProps {
   isSearching: boolean
   error: string | null
   query: string
+  availableKinds: RecordKind[]
+  selectedKinds: RecordKind[]
+  onSelectedKindsChange: (kinds: RecordKind[]) => void
+  onOpenProPanel: (record: RecordAggregate, sourceId?: string) => void
 }
 
 const SearchPanel: React.FC<SearchPanelProps> = ({
@@ -22,9 +27,13 @@ const SearchPanel: React.FC<SearchPanelProps> = ({
   isSearching,
   error,
   query,
+  availableKinds,
+  selectedKinds,
+  onSelectedKindsChange,
+  onOpenProPanel,
 }) => {
   // Info text logic
-  let infoText = "Start by searching for something a speaker said."
+  let infoText = "Use the filters and start searching."
   if (query && rec_agg.length > 0) {
     infoText = `Showing ${rec_agg.length} records for "${query}"`
   } else if (query && rec_agg.length === 0 && !isSearching && !error) {
@@ -37,7 +46,7 @@ const SearchPanel: React.FC<SearchPanelProps> = ({
       style={{
         flex: 1,
         minHeight: 0,
-        marginBottom: 24,
+        marginBottom: 0,
         display: "flex",
         flexDirection: "column",
         justifyContent: rec_agg.length === 0 ? "center" : "flex-start",
@@ -60,12 +69,18 @@ const SearchPanel: React.FC<SearchPanelProps> = ({
           infoText
         )}
       </div>
+      <KindFilters
+        availableKinds={availableKinds}
+        selectedKinds={selectedKinds}
+        onSelectedKindsChange={onSelectedKindsChange}
+      />
       <ResultList
         rec_agg={rec_agg}
         selectedRecord={selectedRecord}
         onSelectRecord={onSelectRecord}
         onShowDetail={onShowDetail}
         viewMode={viewMode}
+        onOpenProPanel={onOpenProPanel}
       />
     </section>
   )

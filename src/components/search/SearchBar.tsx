@@ -3,7 +3,7 @@ import React, { useState } from "react"
 interface SearchBarProps {
   query: string
   onChange: (q: string) => void
-  onSubmit: () => void
+  onSubmit: () => void | Promise<void>
 }
 
 const SearchBar: React.FC<SearchBarProps> = ({ query, onChange, onSubmit }) => {
@@ -32,18 +32,18 @@ const SearchBar: React.FC<SearchBarProps> = ({ query, onChange, onSubmit }) => {
         justifyContent: "center",
         background: "none",
         margin: "0",
-        padding: "1.5rem 0 0.5rem 0",
+        padding: "0.5rem 0 0.5rem 0",
       }}
     >
       <input
         type="text"
         value={input}
         onChange={handleInput}
-        placeholder="Search what was actually said…"
+        placeholder="Search the sources…"
         style={{
           width: "100%",
           maxWidth: 520,
-          fontSize: "1.1rem",
+          fontSize: "1.0rem",
           padding: "0.7em 1.2em",
           borderRadius: 8,
           border: "1px solid var(--border-subtle)",
@@ -61,9 +61,9 @@ const SearchBar: React.FC<SearchBarProps> = ({ query, onChange, onSubmit }) => {
           color: "#fff",
           border: "none",
           borderRadius: 8,
-          padding: "0.7em 1.3em",
+          padding: "0.6em 1.2em",
           fontWeight: 600,
-          fontSize: "1.1rem",
+          fontSize: "1.0rem",
           cursor: "pointer",
           boxShadow: "0 1px 6px 0 rgba(0,0,0,0.04)",
         }}
